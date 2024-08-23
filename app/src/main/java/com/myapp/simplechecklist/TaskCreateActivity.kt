@@ -20,6 +20,10 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Month
+import java.time.MonthDay
+import java.time.Year
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 fun getColor(view: View): String? {
@@ -59,7 +63,7 @@ fun isDateTimeExpired(dateTimeString: String): Boolean {
 }
 
 class TaskCreateActivity : AppCompatActivity() {
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_create)
@@ -79,6 +83,8 @@ class TaskCreateActivity : AppCompatActivity() {
         @Suppress("DEPRECATION") val editingTaskName = intent.getSerializableExtra("editingTaskName")
 
         val cal = Calendar.getInstance()
+
+        val defaultDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
@@ -100,16 +106,28 @@ class TaskCreateActivity : AppCompatActivity() {
         }
 
         textDate.setOnClickListener {
-            DatePickerDialog(this, dateSetListener,
+            DatePickerDialog(
+                this,
+                dateSetListener,
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_YEAR)).show()
+                cal.get(Calendar.DAY_OF_MONTH)).show()
+        }
+
+        textDate.setOnLongClickListener {
+            textDate.text = "Нет"
+            true
         }
 
         textTime.setOnClickListener {
             TimePickerDialog(this, timeSetListener,
                 cal.get(Calendar.HOUR_OF_DAY),
                 cal.get(Calendar.MINUTE), true).show()
+        }
+
+        textTime.setOnLongClickListener {
+            textTime.text = "Нет"
+            true
         }
 
         viewColor.setOnClickListener {
@@ -164,45 +182,47 @@ class TaskCreateActivity : AppCompatActivity() {
                 Toast.makeText(this, "Введите название задачи", Toast.LENGTH_SHORT).show()
             } else if (textDate.text.toString() == "Нет" && textTime.text.toString() != "Нет") {
                 Toast.makeText(this, "Введите дату", Toast.LENGTH_SHORT).show()
-            } else if (db.getTaskByName(textName.text.toString()) != null) {
+            } else if (db.getTaskByName(textName.text.toString()) != null && isEditing == null) {
                 Toast.makeText(this, "Задание с таким именем уже существует", Toast.LENGTH_SHORT).show()
-            } else {
-                val intent = Intent(this, TasksActivity::class.java)
-                intent.putExtra("tasks_text", newTaskText)
-
-                val task = Task(textName.text.toString().trim(), textDate.text.toString(),
-                    textTime.text.toString(), getColor(viewColor).toString(), textPriority.text.toString(),
-                    textRepeat.text.toString(), description.text.toString(), status = "")
-
-                if (textDate.text.toString() == "Нет" && textTime.text.toString() == "Нет") {
-                    task.status = ""
-                } else if (textTime.text.toString() == "Нет" && textDate.text.toString() != "Нет") {
-                    if (isDateExpired(textDate.text.toString()))
-                        task.status = "expired"
-                    else task.status = ""
-                } else if (textDate.text.toString() != "Нет" && textTime.text.toString() != "Нет") {
-                    if (isDateTimeExpired(textDate.text.toString() + " " + textTime.text.toString()))
-                        task.status = "expired"
-                    else task.status = ""
-                }
-
-                if (isEditing != null) {
-                    val db = DbHelper(this, null)
-                    db.deleteTaskByName(editingTaskName.toString())
-                    db.addTask(task)
-                    db.close()
-
-                    Toast.makeText(this, "Изменения сохранены", Toast.LENGTH_SHORT).show()
-                    startActivity(intent)
+            } else if (textRepeat.text != "Нет" && textDate.text == "Нет") {
+                    Toast.makeText(this, "Для повтора задачи необходима дата", Toast.LENGTH_SHORT).show()
                 } else {
-                    val db = DbHelper(this, null)
-                    db.addTask(task)
-                    db.close()
+                    val intent = Intent(this, TasksActivity::class.java)
+                    intent.putExtra("tasks_text", newTaskText)
 
-                    Toast.makeText(this, "Задача добавлена", Toast.LENGTH_SHORT).show()
-                    startActivity(intent)
+                    val task = Task(textName.text.toString().trim(), textDate.text.toString(),
+                        textTime.text.toString(), getColor(viewColor).toString(), textPriority.text.toString(),
+                        textRepeat.text.toString(), description.text.toString(), status = "")
+
+                    if (textDate.text.toString() == "Нет" && textTime.text.toString() == "Нет") {
+                        task.status = ""
+                    } else if (textTime.text.toString() == "Нет" && textDate.text.toString() != "Нет") {
+                        if (isDateExpired(textDate.text.toString()))
+                            task.status = "Просрочено"
+                        else task.status = ""
+                    } else if (textDate.text.toString() != "Нет" && textTime.text.toString() != "Нет") {
+                        if (isDateTimeExpired(textDate.text.toString() + " " + textTime.text.toString()))
+                            task.status = "Просрочено"
+                        else task.status = ""
+                    }
+
+                    if (isEditing != null) {
+                        val db = DbHelper(this, null)
+                        db.deleteTaskByName(editingTaskName.toString())
+                        db.addTask(task)
+                        db.close()
+
+                        Toast.makeText(this, "Изменения сохранены", Toast.LENGTH_SHORT).show()
+                        startActivity(intent)
+                    } else {
+                        val db = DbHelper(this, null)
+                        db.addTask(task)
+                        db.close()
+
+                        Toast.makeText(this, "Задача добавлена", Toast.LENGTH_SHORT).show()
+                        startActivity(intent)
+                    }
                 }
-            }
         }
 
         buttonBack.setOnClickListener {

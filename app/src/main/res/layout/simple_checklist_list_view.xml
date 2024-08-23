@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:text="Name"
         android:textColor="#FFFFFF"
-        android:textSize="20sp" />
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:text="Date"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textListTime"
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:text="Time"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textListPriority"
@@ -45,7 +45,14 @@
             android:layout_weight="1"
             android:text="Priority"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textListRepeat"
@@ -54,7 +61,7 @@
             android:layout_weight="1"
             android:text="Repeat"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textListStatus"
@@ -63,6 +70,6 @@
             android:layout_weight="1"
             android:text="Status"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

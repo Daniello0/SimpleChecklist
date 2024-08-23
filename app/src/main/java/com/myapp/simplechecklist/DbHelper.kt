@@ -44,14 +44,14 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
         return count
     }
 
-    fun getTaskByRowIndex(rowIndex: Int): Task? {
+    fun getTaskByRowIndex(rowIndex: Int): Task {
         val db = this.readableDatabase
         val cursor = db.query(
             "tasks", null, null, null,
             null, null, null
         )
 
-        return if (cursor != null && cursor.moveToPosition(rowIndex)) {
+        if (cursor != null && cursor.moveToPosition(rowIndex)) {
             val task = Task(
                 name = cursor.getString(cursor.getColumnIndexOrThrow("name")),
                 date = cursor.getString(cursor.getColumnIndexOrThrow("date")),
@@ -64,13 +64,14 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
             )
             cursor.close()
             db.close()
-            task
+            return task
         } else {
             cursor?.close()
             db.close()
-            null
+            throw IllegalArgumentException("Task not found at rowIndex: $rowIndex")
         }
     }
+
 
     fun getTaskByName(name: String): Task? {
         val db = this.readableDatabase
@@ -119,6 +120,29 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
 
         val db = this.writableDatabase
         db.update("tasks", values, "name = ?", arrayOf(name))
+        db.close()
+    }
+
+    fun checkTasksStatus() {
+        val db = this.writableDatabase
+        for (i in 1..getRowCount()) {
+            val task = getTaskByRowIndex(i-1)
+            if (task.status != "Выполнено")
+            {
+                if (task.date == "Нет" && task.time == "Нет") {
+                    task.status = ""
+                } else if (task.time == "Нет" && task.date != "Нет") {
+                    if (isDateExpired(task.date))
+                        task.status = "Просрочено"
+                    else task.status = ""
+                } else if (task.date != "Нет" && task.time != "Нет") {
+                    if (isDateTimeExpired(task.date + " " + task.time))
+                        task.status = "Просрочено"
+                    else task.status = ""
+                }
+            }
+            saveTaskByName(task.name, task)
+        }
         db.close()
     }
 
