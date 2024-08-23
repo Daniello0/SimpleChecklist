@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?) :
+class DbHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, "tasks", factory, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
         val query = "CREATE TABLE tasks (id INT PRIMARY KEY, name TEXT, date TEXT, time TEXT, " +
@@ -120,29 +120,6 @@ class DbHelper(val context: Context, val factory: SQLiteDatabase.CursorFactory?)
 
         val db = this.writableDatabase
         db.update("tasks", values, "name = ?", arrayOf(name))
-        db.close()
-    }
-
-    fun checkTasksStatus() {
-        val db = this.writableDatabase
-        for (i in 1..getRowCount()) {
-            val task = getTaskByRowIndex(i-1)
-            if (task.status != "Выполнено")
-            {
-                if (task.date == "Нет" && task.time == "Нет") {
-                    task.status = ""
-                } else if (task.time == "Нет" && task.date != "Нет") {
-                    if (isDateExpired(task.date))
-                        task.status = "Просрочено"
-                    else task.status = ""
-                } else if (task.date != "Нет" && task.time != "Нет") {
-                    if (isDateTimeExpired(task.date + " " + task.time))
-                        task.status = "Просрочено"
-                    else task.status = ""
-                }
-            }
-            saveTaskByName(task.name, task)
-        }
         db.close()
     }
 

@@ -20,10 +20,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.Month
-import java.time.MonthDay
-import java.time.Year
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 fun getColor(view: View): String? {
@@ -83,8 +79,6 @@ class TaskCreateActivity : AppCompatActivity() {
         @Suppress("DEPRECATION") val editingTaskName = intent.getSerializableExtra("editingTaskName")
 
         val cal = Calendar.getInstance()
-
-        val defaultDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
