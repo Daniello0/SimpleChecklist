@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="Main">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-17T20:16:39.896779Z">
+        <DropdownSelection timestamp="2024-08-25T15:49:16.104857Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/Users/daniel/.android/avd/Samsung_Galaxy_A23_API_35.avd" />
@@ -12,9 +12,6 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
-      </SelectionState>
-      <SelectionState runConfigName="MainActivity">
-        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>
