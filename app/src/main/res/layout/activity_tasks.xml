@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#201E28">
+    android:background="#1A1A1A">
 
     <Button
         android:id="@+id/buttonBack"
@@ -12,9 +12,9 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:backgroundTint="#E64173"
+        android:backgroundTint="#FFFFFF"
         android:text="Назад"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,9 +51,9 @@
         android:layout_width="240dp"
         android:layout_height="48dp"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="#E64173"
+        android:backgroundTint="#FFFFFF"
         android:text="Новая задача"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
