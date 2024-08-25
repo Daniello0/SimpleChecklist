@@ -142,6 +142,7 @@ class TasksActivity : AppCompatActivity() {
 
         val taskText: TextView = findViewById(R.id.textTasks)
         var newTaskText = intent.getSerializableExtra("tasks_text")
+        val textSort: TextView = findViewById(R.id.textSort)
         if (newTaskText == null)
             newTaskText = "Сегодня"
         taskText.text = newTaskText.toString()
@@ -150,6 +151,16 @@ class TasksActivity : AppCompatActivity() {
         val todos: MutableList<Task> = mutableListOf()
         val adapter = TaskAdapter(this, todos)
         list.adapter = adapter
+
+        textSort.setOnClickListener {
+            val sorts = arrayOf("Дата и время", "Цвет", "Приоритет")
+            AlertDialog.Builder(this)
+                .setTitle("Выберите сортировку")
+                .setItems(sorts) {_, which ->
+                    textSort.text = sorts[which]
+                }
+                .show()
+        }
 
         taskText.setOnClickListener {
             val filters = arrayOf("Сегодня", "Завтра", "Следующие 7 дней", "Выполненные", "Все задачи")
