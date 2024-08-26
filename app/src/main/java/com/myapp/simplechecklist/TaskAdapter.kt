@@ -14,7 +14,6 @@ import java.util.*
 
 class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Task>(context, 0, tasks) {
 
-    // Список задач
     private val taskList: MutableList<Task> = tasks
 
     @SuppressLint("SetTextI18n")
@@ -58,22 +57,64 @@ class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Tas
         return view
     }
 
-    // Метод добавления задачи
     fun addTask(task: Task) {
         taskList.add(task)
-        sortTasksByDateTime()
-        notifyDataSetChanged() // Обновляем список
+        notifyDataSetChanged()
     }
 
-    // Метод сортировки задач по дате и времени
-    private fun sortTasksByDateTime() {
-        val dateTimeFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        taskList.sortWith(compareBy {
-            try {
-                dateTimeFormat.parse("${it.date} ${it.time}") ?: Date(0)
-            } catch (e: Exception) {
-                Date(0)
+    fun sortTasksByDateTime() {
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
+        val dateTimeFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.US)
+
+        taskList.sortWith(compareBy(
+            { task ->
+                // Сортировка по наличию даты: задачи с датой идут выше задач без даты
+                if (task.date != "Нет") 0 else 1
+            },
+            { task ->
+                // Сортировка по наличию времени: задачи с временем выше задач только с датой
+                if (task.time != "Нет") 0 else 1
+            },
+            { task ->
+                // Сортировка по дате (и времени, если есть)
+                try {
+                    when {
+                        task.date != "Нет" && task.time != "Нет" -> dateTimeFormat.parse("${task.date} ${task.time}")
+                        task.date != "Нет" -> dateFormat.parse(task.date)
+                        else -> Date(Long.MAX_VALUE) // Максимальная дата для задач без даты
+                    }
+                } catch (e: Exception) {
+                    Date(Long.MAX_VALUE) // Максимальная дата в случае ошибки парсинга
+                }
+            }
+        ))
+        notifyDataSetChanged()
+    }
+
+
+
+
+    fun sortTasksByPriority() {
+        taskList.sortWith(compareByDescending { task ->
+            when (task.priority) {
+                "Высокий" -> 3
+                "Средний" -> 2
+                "Низкий" -> 1
+                else -> 0
             }
         })
+        notifyDataSetChanged()
+    }
+
+    fun sortTasksByColor() {
+        taskList.sortWith(compareByDescending { task ->
+            when (task.color) {
+                "Red" -> 3
+                "Blue" -> 2
+                "Green" -> 1
+                else -> 0
+            }
+        })
+        notifyDataSetChanged()
     }
 }

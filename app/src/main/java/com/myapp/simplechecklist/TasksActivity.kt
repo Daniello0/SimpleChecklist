@@ -15,6 +15,20 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+fun sortTasks(textSort: String, adapter: TaskAdapter) {
+    when(textSort) {
+        "Дата и время" -> {
+            adapter.sortTasksByDateTime()
+        }
+        "Цвет" -> {
+            adapter.sortTasksByColor()
+        }
+        "Приоритет" -> {
+            adapter.sortTasksByPriority()
+        }
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun updateListData(taskText: String, adapter: TaskAdapter, db: DbHelper) {
     adapter.clear()
@@ -158,6 +172,7 @@ class TasksActivity : AppCompatActivity() {
                 .setTitle("Выберите сортировку")
                 .setItems(sorts) {_, which ->
                     textSort.text = sorts[which]
+                    sortTasks(sorts[which], adapter)
                 }
                 .show()
         }
@@ -172,6 +187,7 @@ class TasksActivity : AppCompatActivity() {
                     updateListData(newTaskText.toString(), adapter, db)
                     db.close()
                     taskText.text = newTaskText.toString()
+                    sortTasks(textSort.text.toString(), adapter)
                 }
                 .show()
         }
@@ -180,6 +196,7 @@ class TasksActivity : AppCompatActivity() {
             val db = DbHelper(this, null)
             updateListData(newTaskText.toString(), adapter, db)
             db.close()
+            sortTasks(textSort.text.toString(), adapter)
         }
 
         buttonAddTask.setOnClickListener {
@@ -254,13 +271,16 @@ class TasksActivity : AppCompatActivity() {
                                 Toast.makeText(this, "Ошибка: задача не найдена", Toast.LENGTH_SHORT).show()
                                 updateListData(newTaskText.toString(), adapter, db)
                             }
+                            sortTasks(textSort.text.toString(), adapter)
                         }
                         1 -> {
                             //Delete
                             db.deleteTaskByName(name)
                             Toast.makeText(this, "Задание удалено", Toast.LENGTH_SHORT).show()
                             updateListData(newTaskText.toString(), adapter, db)
+                            sortTasks(textSort.text.toString(), adapter)
                         }
+
                     }
                     db.close()
                 }
