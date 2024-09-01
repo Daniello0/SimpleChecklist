@@ -63,31 +63,21 @@ class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Tas
     }
 
     fun sortTasksByDateTime() {
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.US)
         val dateTimeFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.US)
 
-        taskList.sortWith(compareBy(
-            { task ->
-                // Сортировка по наличию даты: задачи с датой идут выше задач без даты
-                if (task.date != "Нет") 0 else 1
-            },
-            { task ->
-                // Сортировка по наличию времени: задачи с временем выше задач только с датой
-                if (task.time != "Нет") 0 else 1
-            },
-            { task ->
-                // Сортировка по дате (и времени, если есть)
-                try {
-                    when {
-                        task.date != "Нет" && task.time != "Нет" -> dateTimeFormat.parse("${task.date} ${task.time}")
-                        task.date != "Нет" -> dateFormat.parse(task.date)
-                        else -> Date(Long.MAX_VALUE) // Максимальная дата для задач без даты
-                    }
-                } catch (e: Exception) {
-                    Date(Long.MAX_VALUE) // Максимальная дата в случае ошибки парсинга
+        taskList.sortWith(compareBy { task ->
+            try {
+                if (task.date != "Нет" && task.time != "Нет") {
+                    dateTimeFormat.parse("${task.date} ${task.time}")
+                } else if (task.date != "Нет") {
+                    dateTimeFormat.parse("${task.date} 24:00")
+                } else {
+                    Date(Long.MAX_VALUE)
                 }
+            } catch (e: Exception) {
+                Date(Long.MAX_VALUE)
             }
-        ))
+        })
         notifyDataSetChanged()
     }
 
@@ -97,9 +87,10 @@ class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Tas
     fun sortTasksByPriority() {
         taskList.sortWith(compareByDescending { task ->
             when (task.priority) {
-                "Высокий" -> 3
-                "Средний" -> 2
-                "Низкий" -> 1
+                "Сделать" -> 4
+                "Запланировать" -> 3
+                "Делегировать" -> 2
+                "Удалить" -> 1
                 else -> 0
             }
         })

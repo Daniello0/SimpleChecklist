@@ -137,7 +137,7 @@ class TaskCreateActivity : AppCompatActivity() {
         }
 
         textPriority.setOnClickListener {
-            val priorities = arrayOf("Низкий", "Средний", "Высокий")
+            val priorities = arrayOf("Сделать", "Запланировать", "Делегировать", "Удалить")
             AlertDialog.Builder(this)
                 .setTitle("Выберите приоритет")
                 .setItems(priorities) { dialog, which ->

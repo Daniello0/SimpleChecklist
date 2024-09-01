@@ -207,7 +207,8 @@ class TasksActivity : AppCompatActivity() {
 
         list.setOnItemClickListener { _, _, i, _ ->
             val choose = arrayOf("Выполнено", "Удалить")
-            val name = (list.getItemAtPosition(i) as Task).name
+            val task = list.getItemAtPosition(i) as Task
+            val name = task.name
             AlertDialog.Builder(this)
                 .setTitle("Выберите действие")
                 .setItems(choose) { _, which ->
@@ -264,6 +265,7 @@ class TasksActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
+                                completedTask.priority = "Удалить"
                                 db.saveTaskByName(name, completedTask)
                                 Toast.makeText(this, "Задание выполнено!", Toast.LENGTH_SHORT).show()
                                 updateListData(newTaskText.toString(), adapter, db)
