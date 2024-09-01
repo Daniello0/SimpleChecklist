@@ -39,16 +39,16 @@ class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Tas
 
         when (statusTextView.text) {
             "" -> {
-                view.setBackgroundColor(Color.argb(77, 255, 255, 0))
+                view.setBackgroundColor(Color.argb(127, 255, 255, 0))
                 nameTextView.paintFlags = nameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
             "Просрочено" -> {
-                view.setBackgroundColor(Color.argb(77, 255, 0, 0))
+                view.setBackgroundColor(Color.argb(127, 255, 0, 0))
                 nameTextView.paintFlags = nameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 statusTextView.setTextColor(Color.RED)
             }
             "Выполнено" -> {
-                view.setBackgroundColor(Color.argb(77, 0, 255, 0))
+                view.setBackgroundColor(Color.argb(127, 0, 255, 0))
                 nameTextView.paintFlags = nameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 statusTextView.setTextColor(Color.GREEN)
             }
