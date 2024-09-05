@@ -221,6 +221,7 @@ class TasksActivity : AppCompatActivity() {
                                 when (completedTask.repeat) {
                                     "Нет" -> {
                                         completedTask.status = "Выполнено"
+                                        completedTask.priority = "Удалить"
                                     }
                                     "Каждый день" -> {
                                         val formatterDate = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -265,7 +266,6 @@ class TasksActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                                completedTask.priority = "Удалить"
                                 db.saveTaskByName(name, completedTask)
                                 Toast.makeText(this, "Задание выполнено!", Toast.LENGTH_SHORT).show()
                                 updateListData(newTaskText.toString(), adapter, db)
