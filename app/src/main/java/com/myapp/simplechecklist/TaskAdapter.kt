@@ -21,6 +21,8 @@ class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Tas
         val task = getItem(position)
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.simple_checklist_list_view, parent, false)
 
+        view.setBackgroundColor(Color.argb(0, 0, 0, 0))
+
         val nameTextView: TextView = view.findViewById(R.id.textListName)
         val dateTextView: TextView = view.findViewById(R.id.textListDate)
         val timeTextView: TextView = view.findViewById(R.id.textListTime)
@@ -39,16 +41,13 @@ class TaskAdapter(context: Context, tasks: MutableList<Task>) : ArrayAdapter<Tas
 
         when (statusTextView.text) {
             "" -> {
-                view.setBackgroundColor(Color.argb(127, 255, 255, 0))
                 nameTextView.paintFlags = nameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
             "Просрочено" -> {
-                view.setBackgroundColor(Color.argb(127, 255, 0, 0))
                 nameTextView.paintFlags = nameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 statusTextView.setTextColor(Color.RED)
             }
             "Выполнено" -> {
-                view.setBackgroundColor(Color.argb(127, 0, 255, 0))
                 nameTextView.paintFlags = nameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 statusTextView.setTextColor(Color.GREEN)
             }

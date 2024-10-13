@@ -36,6 +36,7 @@ fun getColor(view: View): String? {
             red > green && red > blue -> "Red"
             green > red && green > blue -> "Green"
             blue > red && blue > green -> "Blue"
+            green > blue && red > blue || green == red -> "Yellow"
             else -> "Cannot determine"
         }
     }
@@ -125,8 +126,8 @@ class TaskCreateActivity : AppCompatActivity() {
         }
 
         viewColor.setOnClickListener {
-            val colors = arrayOf("Зеленый", "Синий", "Красный")
-            val colorValues = arrayOf(Color.GREEN, Color.BLUE, Color.RED)
+            val colors = arrayOf("Зеленый", "Синий", "Желтый", "Красный")
+            val colorValues = arrayOf(Color.GREEN, Color.BLUE, Color.YELLOW, Color.RED)
             AlertDialog.Builder(this)
                 .setTitle("Выберите цвет")
                 .setItems(colors) { dialog, which ->
